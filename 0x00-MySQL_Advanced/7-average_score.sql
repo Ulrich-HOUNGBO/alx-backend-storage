@@ -3,7 +3,7 @@
 -- Takes 1 input user_id, a users.id
 
 DELIMITER $$;
-DROP PROCEDURE IF EXISTS ComputeAverageScoreForUser
+DROP PROCEDURE IF EXISTS ComputeAverageScoreForUser;
 CREATE PROCEDURE ComputeAverageScoreForUser(IN userId INT)
 BEGIN
     UPDATE users
