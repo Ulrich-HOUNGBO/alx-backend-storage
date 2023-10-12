@@ -2,4 +2,4 @@
 -- Only first letter of name AND score must be indexed
 
 CREATE INDEX idx_name_score
-ON score (name(1), score);
+ON names (name(1), score);
