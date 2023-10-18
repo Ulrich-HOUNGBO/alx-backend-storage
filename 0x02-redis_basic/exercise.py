@@ -23,14 +23,30 @@ class Cache:
         self._redis = redis.Redis()
         self._redis.flushdb()
 
-    @call_history
-    @count_calls
     def store(self, data: Union[str, bytes, int, float]) -> str:
-        """Prototype: def store(self, data: Union[str, bytes, int, float])
-        Generates a random key (e.g. using uuid)
-        Stores the input data in Redis using the random key
-        Returns the key
         """
-        key = str(uuid.uuid4())
-        self._redis.set(key, data)
-        return key
+        Store history of inputs and outputs for a particular function
+        """
+        gen = str(uuid.uuid4())
+        self._redis.set(gen, data)
+        return gen
+
+    def get(self, key: str, fn: Optional[Callable] = None) -> Union[str, bytes, int, float]:
+        """
+        Convert data back to desired format
+        """
+        data = self._redis.get(key)
+        return fn(data) if fn else data
+
+    def get_int(self, data):
+        """
+        Convert data to int
+        """
+        return self.get(data, int)
+
+    def get_str(self, key):
+        """
+        Convert data to str
+        """
+        data = self.get(key)
+        return data.decode('utf-8')
