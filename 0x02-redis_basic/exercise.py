@@ -10,6 +10,22 @@ import uuid
 from typing import Union, Callable, Optional
 
 
+def count_calls(method: Callable) -> Callable:
+    """
+    Count the number of times a method is called
+    """
+    key = method.__qualname__
+
+    def wrapper(self, *args, **kwds):
+        """
+        Wrapper function
+        """
+        self._redis.incr(key)
+        return method(self, *args, **kwds)
+
+    return wrapper
+
+
 class Cache:
     """
     Store an instance of the Redis client as a private variable named _redis
@@ -23,6 +39,7 @@ class Cache:
         self._redis = redis.Redis()
         self._redis.flushdb()
 
+    @count_calls
     def store(self, data: Union[str, bytes, int, float]) -> str:
         """
         Store history of inputs and outputs for a particular function
