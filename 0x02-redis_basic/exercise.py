@@ -14,12 +14,12 @@ def count_calls(method: Callable) -> Callable:
     """
     Count the number of times a method is called
     """
-    key = method.__qualname__
 
     def wrapper(self, *args, **kwds):
         """
         Wrapper function
         """
+        key = method.__qualname__
         self._redis.incr(key)
         return method(self, *args, **kwds)
 
